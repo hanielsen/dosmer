@@ -1,8 +1,8 @@
-var CACHE_NAME = 'dosmer-1';
+var CACHE_NAME = 'dosmer-2';
 var urlsToCache = [
-    '/dosmer.html', 
-    '/favicon.ico',
-    '/dosmer.png',
+    './dosmer.html', 
+    './favicon.ico',
+    './dosmer.png',
 ];
 
 self.addEventListener('install', function(event) {
