@@ -1,0 +1,640 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Dosmer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="dosmer.png">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:sans-serif;
+    background:#000;
+}
+
+#col1 {
+    float: left;
+    width: 40%;
+    padding: .1em;
+}
+
+#col1 ul {
+    list-style:none outside none;
+    padding-left:.5em;
+    margin:0px;
+}
+
+#col2 {
+    float: left;
+    width: 60%;
+    padding: .1em;
+}
+
+#col2 ul {
+    list-style:none outside none;
+    padding-left:.1em;
+    margin:0px;
+}
+
+.dropdown {
+    position: relative;
+    background-color: #ccc;
+    padding: .4em;
+}
+
+.dropdown a {
+    color: white;
+    text-align: center;
+    padding: .4em .8em;
+    text-decoration: none;
+}
+
+.dropdown a:hover {
+    background-color:#eee;
+}
+
+.dropcontent {
+    position:absolute;
+    margin-top:.4em;
+    margin-left:0em;
+    background-color:#fff;
+    min-width:auto;
+    overflow:auto;
+    padding:0em;
+    z-index:1;
+}
+
+.dropcontent a {
+    color:black;
+    padding:.125em;
+    font-size:1.0em;
+    text-decoration:none;
+    text-align:left;
+    display:block;
+    margin:0em;
+}
+
+.dropcontent a:nth-of-type(even) {
+    background:#fff;
+}
+
+.dropcontent a:hover {
+    background-color:#eee;
+}
+
+#drop1 ul {
+    list-style:none outside none;
+    padding:0px;
+    margin:0px;    
+    float:left;
+}
+
+#lv0, #lv1 {
+    max-height:800px;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+#lv0 li {
+    background:#cfc;
+}
+
+#lv0 li:hover {
+    background:#8c8;
+}
+
+#lv0 .k0, #lv0 .k1, #lv0 .k2, #lv0 .k3, #lv0 .k4,
+#lv0 .k5, #lv0 .k6, #lv0 .k7, #lv0 .k8, #lv0 .k9 {
+    background:#8c8 !important;
+}
+
+#lv1 li {
+    background:#fdd;
+}
+
+#lv1 .k0, #lv1 .k1, #lv1 .k2, #lv1 .k3, #lv1 .k4,
+#lv1 .k5, #lv1 .k6, #lv1 .k7, #lv1 .k8, #lv1 .k9 {
+    background:#daa !important;
+}
+
+</style>
+</head>
+<body>
+
+<div class="dropdown">
+    <a href="#" onclick="dropfunction()">Adm</a>
+        <div id="drop1" class="dropcontent">
+            <ul>
+                <li><a type="button" onclick="gem()">Gem liste</a></li>
+                <li><a type="button" onclick="hent()">Hent liste</a></li>
+            </ul>
+        </div>
+    <a href="#" onclick="krv()">Kurv</a>
+    <a href="#" onclick="rdg()">Ret</a>
+    <a href="#" onclick="rns()">Rens</a>
+</div>
+
+<div id="row">
+    <div id="col1">
+        <ul id="lv0">
+        </ul>
+    </div>
+  
+    <div id="col2">
+        <ul id="lv1">
+        </ul>
+    </div>
+</div>
+
+<script charset="utf-8">
+const v=
+[{vid:"0",navn:"agurk",kat:"0",mgd:"0",pos:""},
+{vid:"1",navn:"agurk",kat:"4",mgd:"0",pos:""},
+{vid:"2",navn:"ananas",kat:"0",mgd:"0",pos:""},
+{vid:"3",navn:"appelsin",kat:"0",mgd:"0",pos:""},
+{vid:"4",navn:"asier",kat:"4",mgd:"0",pos:""},
+{vid:"5",navn:"bacon",kat:"2",mgd:"0",pos:""},
+{vid:"6",navn:"bagepapir",kat:"6",mgd:"0",pos:""},
+{vid:"7",navn:"banan",kat:"0",mgd:"0",pos:""},
+{vid:"8",navn:"bind",kat:"6",mgd:"0",pos:""},
+{vid:"9",navn:"bleer",kat:"6",mgd:"0",pos:""},
+{vid:"10",navn:"blegseleri",kat:"0",mgd:"0",pos:""},
+{vid:"11",navn:"blomkål",kat:"0",mgd:"0",pos:""},
+{vid:"12",navn:"blomme",kat:"0",mgd:"0",pos:""},
+{vid:"13",navn:"boller",kat:"8",mgd:"0",pos:""},
+{vid:"14",navn:"brød",kat:"3",mgd:"0",pos:""},
+{vid:"15",navn:"bønner",kat:"0",mgd:"0",pos:""},
+{vid:"16",navn:"bønner",kat:"3",mgd:"0",pos:""},
+{vid:"17",navn:"champignon",kat:"0",mgd:"0",pos:""},
+{vid:"18",navn:"chile",kat:"0",mgd:"0",pos:""},
+{vid:"19",navn:"chips",kat:"7",mgd:"0",pos:""},
+{vid:"20",navn:"chokolade",kat:"7",mgd:"0",pos:""},
+{vid:"21",navn:"chreme fraiche",kat:"1",mgd:"0",pos:""},
+{vid:"22",navn:"citron",kat:"0",mgd:"0",pos:""},
+{vid:"23",navn:"cola",kat:"5",mgd:"0",pos:""},
+{vid:"24",navn:"dadel",kat:"0",mgd:"0",pos:""},
+{vid:"25",navn:"dej",kat:"3",mgd:"0",pos:""},
+{vid:"26",navn:"dressing",kat:"3",mgd:"0",pos:""},
+{vid:"27",navn:"figne",kat:"0",mgd:"0",pos:""},
+{vid:"28",navn:"fisk hk.",kat:"2",mgd:"0",pos:""},
+{vid:"29",navn:"fiskefilet",kat:"2",mgd:"0",pos:""},
+{vid:"30",navn:"flormelis",kat:"4",mgd:"0",pos:""},
+{vid:"31",navn:"flutes",kat:"8",mgd:"0",pos:""},
+{vid:"32",navn:"fløde",kat:"1",mgd:"0",pos:""},
+{vid:"33",navn:"franskbrød",kat:"8",mgd:"0",pos:""},
+{vid:"34",navn:"granatæble",kat:"0",mgd:"0",pos:""},
+{vid:"35",navn:"grape",kat:"0",mgd:"0",pos:""},
+{vid:"36",navn:"gris hk.",kat:"2",mgd:"0",pos:""},
+{vid:"37",navn:"gris kotelet",kat:"2",mgd:"0",pos:""},
+{vid:"38",navn:"gris mørbrad",kat:"2",mgd:"0",pos:""},
+{vid:"39",navn:"gris ribbenssteg",kat:"2",mgd:"0",pos:""},
+{vid:"40",navn:"gris småkød",kat:"2",mgd:"0",pos:""},
+{vid:"41",navn:"grønt bl.",kat:"3",mgd:"0",pos:""},
+{vid:"42",navn:"gulerod",kat:"0",mgd:"0",pos:""},
+{vid:"43",navn:"gær",kat:"1",mgd:"0",pos:""},
+{vid:"44",navn:"hamburgerryg",kat:"2",mgd:"0",pos:""},
+{vid:"45",navn:"havregryn",kat:"4",mgd:"0",pos:""},
+{vid:"46",navn:"hindbær",kat:"0",mgd:"0",pos:""},
+{vid:"47",navn:"hvidkål",kat:"0",mgd:"0",pos:""},
+{vid:"48",navn:"hvidløg",kat:"0",mgd:"0",pos:""},
+{vid:"49",navn:"jordbær",kat:"0",mgd:"0",pos:""},
+{vid:"50",navn:"juice",kat:"5",mgd:"0",pos:""},
+{vid:"51",navn:"juice app",kat:"1",mgd:"0",pos:""},
+{vid:"52",navn:"juice æble",kat:"1",mgd:"0",pos:""},
+{vid:"53",navn:"kaffe ",kat:"4",mgd:"0",pos:""},
+{vid:"54",navn:"kager",kat:"8",mgd:"0",pos:""},
+{vid:"55",navn:"kakao",kat:"4",mgd:"0",pos:""},
+{vid:"56",navn:"kalv bov",kat:"2",mgd:"0",pos:""},
+{vid:"57",navn:"kalv bryst",kat:"2",mgd:"0",pos:""},
+{vid:"58",navn:"kalv hk",kat:"2",mgd:"0",pos:""},
+{vid:"59",navn:"kalv schnitzel",kat:"2",mgd:"0",pos:""},
+{vid:"60",navn:"kalv småkød",kat:"2",mgd:"0",pos:""},
+{vid:"61",navn:"kartoffel",kat:"0",mgd:"0",pos:""},
+{vid:"62",navn:"kartoffel",kat:"3",mgd:"0",pos:""},
+{vid:"63",navn:"ketchup",kat:"4",mgd:"0",pos:""},
+{vid:"64",navn:"kirsebær",kat:"0",mgd:"0",pos:""},
+{vid:"65",navn:"kiwi",kat:"0",mgd:"0",pos:""},
+{vid:"66",navn:"krydderi",kat:"4",mgd:"0",pos:""},
+{vid:"67",navn:"kylling",kat:"2",mgd:"0",pos:""},
+{vid:"68",navn:"kylling bryst",kat:"2",mgd:"0",pos:""},
+{vid:"69",navn:"kylling lår",kat:"2",mgd:"0",pos:""},
+{vid:"70",navn:"kødpølse",kat:"2",mgd:"0",pos:""},
+{vid:"71",navn:"køkkenrulle",kat:"6",mgd:"0",pos:""},
+{vid:"72",navn:"laks",kat:"2",mgd:"0",pos:""},
+{vid:"73",navn:"lam",kat:"2",mgd:"0",pos:""},
+{vid:"74",navn:"leverpostej",kat:"2",mgd:"0",pos:""},
+{vid:"75",navn:"lime",kat:"0",mgd:"0",pos:""},
+{vid:"76",navn:"løg",kat:"0",mgd:"0",pos:""},
+{vid:"77",navn:"madpapir",kat:"6",mgd:"0",pos:""},
+{vid:"78",navn:"majs",kat:"3",mgd:"0",pos:""},
+{vid:"79",navn:"mandler",kat:"4",mgd:"0",pos:""},
+{vid:"80",navn:"mango",kat:"0",mgd:"0",pos:""},
+{vid:"81",navn:"marcipan",kat:"7",mgd:"0",pos:""},
+{vid:"82",navn:"mayonaise",kat:"3",mgd:"0",pos:""},
+{vid:"83",navn:"mel hvede",kat:"4",mgd:"0",pos:""},
+{vid:"84",navn:"mel rug",kat:"4",mgd:"0",pos:""},
+{vid:"85",navn:"melon",kat:"0",mgd:"0",pos:""},
+{vid:"86",navn:"mælk kærne",kat:"1",mgd:"0",pos:""},
+{vid:"87",navn:"mælk let",kat:"1",mgd:"0",pos:""},
+{vid:"88",navn:"mælk sød",kat:"1",mgd:"0",pos:""},
+{vid:"89",navn:"nutella",kat:"4",mgd:"0",pos:""},
+{vid:"90",navn:"nødder has.",kat:"4",mgd:"0",pos:""},
+{vid:"91",navn:"nødder val.",kat:"4",mgd:"0",pos:""},
+{vid:"92",navn:"okse bov",kat:"2",mgd:"0",pos:""},
+{vid:"93",navn:"okse hk.",kat:"2",mgd:"0",pos:""},
+{vid:"94",navn:"okse småkød",kat:"2",mgd:"0",pos:""},
+{vid:"95",navn:"olie oliven",kat:"4",mgd:"0",pos:""},
+{vid:"96",navn:"olie raps",kat:"4",mgd:"0",pos:""},
+{vid:"97",navn:"olie vindrue",kat:"4",mgd:"0",pos:""},
+{vid:"98",navn:"oliven",kat:"3",mgd:"0",pos:""},
+{vid:"99",navn:"opvask tab.",kat:"6",mgd:"0",pos:""},
+{vid:"100",navn:"ost brie",kat:"1",mgd:"0",pos:""},
+{vid:"101",navn:"ost revet",kat:"1",mgd:"0",pos:""},
+{vid:"102",navn:"ost skære",kat:"1",mgd:"0",pos:""},
+{vid:"103",navn:"pasta",kat:"3",mgd:"0",pos:""},
+{vid:"104",navn:"pasta",kat:"4",mgd:"0",pos:""},
+{vid:"105",navn:"peber",kat:"4",mgd:"0",pos:""},
+{vid:"106",navn:"peberfrugt",kat:"0",mgd:"0",pos:""},
+{vid:"107",navn:"persillerod",kat:"0",mgd:"0",pos:""},
+{vid:"108",navn:"plast folie",kat:"6",mgd:"0",pos:""},
+{vid:"109",navn:"plast poser",kat:"6",mgd:"0",pos:""},
+{vid:"110",navn:"porer",kat:"0",mgd:"0",pos:""},
+{vid:"111",navn:"pære",kat:"0",mgd:"0",pos:""},
+{vid:"112",navn:"pølser",kat:"2",mgd:"0",pos:""},
+{vid:"113",navn:"rabarber",kat:"0",mgd:"0",pos:""},
+{vid:"114",navn:"remoulade",kat:"3",mgd:"0",pos:""},
+{vid:"115",navn:"ristet løg",kat:"4",mgd:"0",pos:""},
+{vid:"116",navn:"rosenkål",kat:"0",mgd:"0",pos:""},
+{vid:"117",navn:"rugbrød",kat:"8",mgd:"0",pos:""},
+{vid:"118",navn:"rullepølse",kat:"2",mgd:"0",pos:""},
+{vid:"119",navn:"rødbede",kat:"4",mgd:"0",pos:""},
+{vid:"120",navn:"rødkål",kat:"0",mgd:"0",pos:""},
+{vid:"121",navn:"rødkål",kat:"4",mgd:"0",pos:""},
+{vid:"122",navn:"saft",kat:"5",mgd:"0",pos:""},
+{vid:"123",navn:"salat",kat:"0",mgd:"0",pos:""},
+{vid:"124",navn:"salat ital.",kat:"3",mgd:"0",pos:""},
+{vid:"125",navn:"salt",kat:"4",mgd:"0",pos:""},
+{vid:"126",navn:"seleri",kat:"0",mgd:"0",pos:""},
+{vid:"127",navn:"sennep",kat:"3",mgd:"0",pos:""},
+{vid:"128",navn:"shampoo",kat:"6",mgd:"0",pos:""},
+{vid:"129",navn:"sirup",kat:"4",mgd:"0",pos:""},
+{vid:"130",navn:"skinke",kat:"2",mgd:"0",pos:""},
+{vid:"131",navn:"slik",kat:"7",mgd:"0",pos:""},
+{vid:"132",navn:"smør",kat:"1",mgd:"0",pos:""},
+{vid:"133",navn:"spegepølse",kat:"2",mgd:"0",pos:""},
+{vid:"134",navn:"spidskål",kat:"0",mgd:"0",pos:""},
+{vid:"135",navn:"spinat",kat:"3",mgd:"0",pos:""},
+{vid:"136",navn:"spiritus",kat:"7",mgd:"0",pos:""},
+{vid:"137",navn:"sukker",kat:"4",mgd:"0",pos:""},
+{vid:"138",navn:"suppe",kat:"3",mgd:"0",pos:""},
+{vid:"139",navn:"svesker",kat:"4",mgd:"0",pos:""},
+{vid:"140",navn:"syltetøj",kat:"4",mgd:"0",pos:""},
+{vid:"141",navn:"sæbe",kat:"6",mgd:"0",pos:""},
+{vid:"142",navn:"sølvfolie",kat:"6",mgd:"0",pos:""},
+{vid:"143",navn:"tandpasta",kat:"6",mgd:"0",pos:""},
+{vid:"144",navn:"the",kat:"4",mgd:"0",pos:""},
+{vid:"145",navn:"tobak",kat:"7",mgd:"0",pos:""},
+{vid:"146",navn:"toiletrulle",kat:"6",mgd:"0",pos:""},
+{vid:"147",navn:"tomat",kat:"0",mgd:"0",pos:""},
+{vid:"148",navn:"tomat dåse",kat:"4",mgd:"0",pos:""},
+{vid:"149",navn:"torsk",kat:"2",mgd:"0",pos:""},
+{vid:"150",navn:"vand",kat:"5",mgd:"0",pos:""},
+{vid:"151",navn:"vin hvid",kat:"5",mgd:"0",pos:""},
+{vid:"152",navn:"vin rød",kat:"5",mgd:"0",pos:""},
+{vid:"153",navn:"vindrue",kat:"0",mgd:"0",pos:""},
+{vid:"154",navn:"ymer",kat:"1",mgd:"0",pos:""},
+{vid:"155",navn:"yoghurt",kat:"1",mgd:"0",pos:""},
+{vid:"156",navn:"æble",kat:"0",mgd:"0",pos:""},
+{vid:"157",navn:"æg",kat:"1",mgd:"0",pos:""},
+{vid:"158",navn:"ærter",kat:"3",mgd:"0",pos:""},
+{vid:"159",navn:"øl",kat:"5",mgd:"0",pos:""},
+]
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/sw.js").then(function(registration) {
+            console.log("ServiceWorker registration successful with scope: ", 
+                            registration.scope);
+        }, function(err) {
+              console.log("ServiceWorker registration failed: ", err);
+        });
+    });
+}  
+
+let l = [];
+let k = [];
+let vaid = 500;
+
+const d1 = document.getElementById("drop1");
+d1.style.display = "none";
+function dropfunction() {
+    if (d1.style.display==="block") {
+        d1.style.display = "none";
+    }
+    else {
+        d1.style.display = "block";
+    }
+}
+
+nvl();
+nll();
+
+function nyvare(vid, navn, kat, mgd, pos) {
+    this.vid = vid;
+    this.navn = navn;
+    this.kat = kat;
+    this.mgd = mgd;
+    this.pos = pos;
+} 
+
+function nvl() {
+    const ul0 = document.querySelector("#lv0");
+    ul0.innerHTML = ""; 
+    
+    let li0 = document.createElement("li");
+    li0.style.background = "#8c8";
+    li0.append("Varer");
+    ul0.append(li0);
+    
+    li0 = document.createElement("li");
+    li0.setAttribute("class", "k9");
+    li0.append("Andet\u00a0\u00a0");
+    let in0 = document.createElement("input");
+    in0.setAttribute("id", "nvt");
+    in0.setAttribute("type", "text");
+    in0.setAttribute("style", "width:10em;");
+    li0.append(in0);
+    in0 = document.createElement("input");
+    in0.setAttribute("id", "nvm");
+    in0.setAttribute("type", "number");
+    in0.setAttribute("style", "width:3em;");
+    in0.setAttribute("value", 1);
+    li0.append(in0);
+    const a0 = document.createElement("a");
+    a0.addEventListener("click", vdiv);
+    a0.append("\u00a0\u00a0Liste");
+    li0.append(a0);
+    ul0.append(li0);
+    
+    for (let i in v) {
+        let n = v[i].navn;
+        let vt = "v"+v[i].vid;
+        li0 = document.createElement("li");
+        li0.append(n);
+        li0.setAttribute("id", vt);
+        li0.addEventListener("click", function(){vtl(this.id);});
+        ul0.append(li0);
+    }
+}
+
+function nll() {
+    const ul1 = document.querySelector("#lv1");
+    ul1.innerHTML = "";
+
+    let li1 = document.createElement("li");
+    li1.append("Liste");
+    ul1.append(li1);
+
+    const kt = ["Frugt\&Grønt", "Mælk\&Ost", "Kød\&Fisk", "Køl\&Frost", "Kolonial",
+              "Vand\&Øl", "Husholdning", "Slik\&Luksus", "Bager", "Andet"];
+    for (let i in kt) {
+        li1 = document.createElement("li");
+        li1.append(kt[i]);
+        li1.setAttribute("class", "k"+i);
+        ul1.append(li1);
+    }
+
+    for (let i in l) {
+        let t = l[i].vid;
+        let n = l[i].navn;
+        let m = l[i].mgd;
+        let ka = "k"+(Number(l[i].kat)+1);
+        let spos = l[i].pos;
+        let lt = "l"+t;
+
+        li1 = document.createElement("li");
+        li1.setAttribute("id", lt);
+        let sp1 = document.createElement("span");
+        sp1.addEventListener("click", function(){mp(t);});
+        sp1.append("\u00a0\u00a0"+n) 
+        li1.append(sp1);
+        li1.append(" "+m);
+
+        if (spos) {
+            li1.append("\u00a0\u00a0"+spos);
+        } else {
+            li1.append("\u00a0\u00a0\u00a0");
+            let in1 = document.createElement("input");
+            in1.setAttribute("type", "text");
+            in1.setAttribute("style", "width:10em;");
+            in1.addEventListener("input", function(){l[i].pos=this.value;});
+            li1.append(in1);
+        }
+        l[i].pos += " ";
+        if (ka!="k10") {
+            document.querySelector("#lv1 ."+ka).before(li1);
+        } else {
+            document.querySelector("#lv1 .k9").after(li1);
+        }        
+    }
+}
+
+function vtl(evt) {
+    let i, li, vi;
+    evt = evt.substring(1);
+    for (i in l) {
+        if (evt===l[i].vid) {
+            li=l[i];
+        }
+    }
+    if (li) {
+        li.mgd = Number(li.mgd)+1;
+    } else {
+        for (i in v) {
+            if (evt===v[i].vid) {
+                vi=v[i];
+            }
+        }
+        l.push(new nyvare(vi.vid, vi.navn, vi.kat, "1", ""));
+    }
+    nll();
+}
+
+function mp(evt) {
+    let i, n, li;
+    for (i in l) {
+        if (evt===l[i].vid) {
+            li = l[i];
+            n = i;
+        }
+    }
+    li.mgd = Number(li.mgd)-1;
+    if (li.mgd===0) {
+        delete l[n];
+    }
+    nll();
+}
+
+function nll2() {
+    const ul1 = document.querySelector("#lv0");
+    ul1.innerHTML = "";
+
+    let li1 = document.createElement("li");
+    li1.append("Liste");
+    ul1.append(li1);
+
+    const kt = ["Frugt\&Grønt", "Mælk\&Ost", "Kød\&Fisk", "Køl\&Frost", "Kolonial",
+              "Vand\&Øl", "Husholdning", "Slik\&Luksus", "Bager", "Andet"];
+    for (let i in kt) {
+        li1 = document.createElement("li");
+        li1.append(kt[i]);
+        li1.setAttribute("class", "k"+i);
+        ul1.append(li1);
+    }
+
+    for (let i in l) {
+        let t = l[i].vid;    
+        let n = l[i].navn;
+        let m = l[i].mgd;
+        let ka = "k"+(Number(l[i].kat)+1);
+        let spos = l[i].pos;
+        let lt = "m"+t;
+
+        li1 = document.createElement("li");
+        li1.setAttribute("id", lt);
+        li1.addEventListener("click", function(){vtl2(t);});
+        li1.append("\u00a0\u00a0"+n) 
+        li1.append(" "+m);
+
+        if (spos) {
+            li1.append("\u00a0\u00a0"+spos);
+        } 
+        if (ka!="k10") {
+            document.querySelector("#lv0 ."+ka).before(li1);
+        } else {
+            document.querySelector("#lv0 .k9").after(li1);
+        }        
+    }
+}
+
+function nlk() {
+    const ul1 = document.querySelector("#lv1");
+    ul1.innerHTML = "";
+
+    let li1 = document.createElement("li");
+    li1.append("Kurv");
+    ul1.append(li1);
+
+    const kt = ["Frugt\&Grønt", "Mælk\&Ost", "Kød\&Fisk", "Køl\&Frost", "Kolonial",
+              "Vand\&Øl", "Husholdning", "Slik\&Luksus", "Bager", "Andet"];
+    for (let i in kt) {
+        li1 = document.createElement("li");
+        li1.append(kt[i]);
+        li1.setAttribute("class", "k"+i);
+        ul1.append(li1);
+    }
+
+    for (let i in k) {
+        let t = k[i].vid;    
+        let n = k[i].navn;
+        let m = k[i].mgd;
+        let ka = "k"+(Number(k[i].kat)+1);
+        let spos = k[i].pos;
+        let lt = "k"+k[i].vid;
+
+        li1 = document.createElement("li");
+        li1.setAttribute("id", lt);
+        li1.addEventListener("click", function(){mp2(t);});
+        li1.append("\u00a0\u00a0"+n) 
+        li1.append(" "+m);
+
+        if (spos) {
+            li1.append("\u00a0\u00a0"+spos);
+        } 
+        if (ka!="k10") {
+            document.querySelector("#lv1 ."+ka).before(li1);
+        } else {
+            document.querySelector("#lv1 .k9").after(li1);
+        }        
+    }
+}
+
+function vtl2(evt) {
+    let i, n, li;
+    for (i in l) {
+        if (evt===l[i].vid) {
+            li=l[i];
+            n=i;
+        }
+    }
+    k.push(new nyvare(li.vid,li.navn,li.kat,li.mgd,li.pos));
+    delete l[n];
+    nll2();
+    nlk();
+}
+
+function mp2(evt) {
+    let i, n, ki;
+    for (i in k) {
+        if (evt===k[i].vid) {
+            ki=k[i];
+            n=i;
+        }
+    }
+    l.push(new nyvare(ki.vid,ki.navn,ki.kat,ki.mgd,ki.pos));
+    delete k[n];
+    nll2();
+    nlk();
+}
+
+function gem() {
+    let jl=JSON.stringify(l);
+    localStorage.removeItem("l");
+    localStorage.setItem("l",jl);
+    dropfunction();
+}
+
+function hent() {
+    l=JSON.parse(localStorage.getItem("l"));
+    setTimeout(nvl,100);
+    setTimeout(nll,500);
+//    nvl();
+//    nll();
+    dropfunction();
+}
+
+function krv() {
+    nll2();
+    nlk();
+}
+
+function rdg() {
+    nvl();
+    nll();
+}
+
+function rns() {
+    l = [];
+    k = [];
+    nvl();
+    nll();
+}
+ 
+function vdiv() {
+    let xt = document.getElementById("nvt"); 
+    let xm = document.getElementById("nvm"); 
+    l.push(new nyvare(""+vaid, xt.value, "9", ""+xm.value, " "));
+    vaid +=1;
+    nll();
+}
+
+</script>
+</body>
+</html>
